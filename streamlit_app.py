@@ -85,21 +85,21 @@ state_counts_df = state_counts_df.dropna(subset=['State', 'Week1Count'])
 state_counts_df['RemainingCount'] = state_counts_df['TotalCount'] - state_counts_df['Week1Count']
 
 # Step 6: Calculate percentage of Week 1 eliminations and remaining contestants
-state_counts_df['PercentWeek1'] = (state_counts_df['Week1Count'] / state_counts_df['TotalCount']) * 100
-state_counts_df['PercentRemaining'] = (state_counts_df['RemainingCount'] / state_counts_df['TotalCount']) * 100
+state_counts_df['Eliminated Week 1'] = (state_counts_df['Week1Count'] / state_counts_df['TotalCount']) * 100
+state_counts_df[' Not Eliminated Week 1'] = (state_counts_df['RemainingCount'] / state_counts_df['TotalCount']) * 100
 
 # Step 7: Reshape the data to make it suitable for stacked bar chart (melt the data)
-melted_df = state_counts_df.melt(id_vars='State', value_vars=['PercentWeek1', 'PercentRemaining'],
+melted_df = state_counts_df.melt(id_vars='State', value_vars=['Eliminated Week 1', ' Not Eliminated Week 1'],
                                   var_name='Status', value_name='Percent')
 
 # Step 8: Create the Altair stacked bar chart
 base = alt.Chart(melted_df).mark_bar().encode(
-    x=alt.X('State:N', sort=alt.EncodingSortField(field='PercentWeek1', order='descending'), title='State'),
+    x=alt.X('State:N', sort=alt.EncodingSortField(field='Eliminated Week 1', order='descending'), title='State'),
     y=alt.Y('Percent:Q', title='% of Total Contestants'),
     color=alt.Color('Status:N', 
                     title='Contestant Status',  # Title for the legend
                     scale=alt.Scale(
-                        domain=['PercentWeek1', 'PercentRemaining']  # Original categories
+                        domain=['Eliminated Week 1', ' Not Eliminated Week 1']  # Original categories
                         # range=['#FF6347', '#32CD32']  # New legend labels (you can use colors too)
                     )
     ),
@@ -170,14 +170,14 @@ age_counts_df = age_counts_df.dropna(subset=['AgeBucket', 'Week1Count'])
 age_counts_df['RemainingCount'] = age_counts_df['TotalCount'] - age_counts_df['Week1Count']
 
 # Step 8: Calculate percentage of Week 1 eliminations and remaining contestants
-age_counts_df['PercentWeek1'] = (age_counts_df['Week1Count'] / age_counts_df['TotalCount']) * 100
-age_counts_df['PercentRemaining'] = (age_counts_df['RemainingCount'] / age_counts_df['TotalCount']) * 100
+age_counts_df['Eliminated Week 1'] = (age_counts_df['Week1Count'] / age_counts_df['TotalCount']) * 100
+age_counts_df[' Not Eliminated Week 1'] = (age_counts_df['RemainingCount'] / age_counts_df['TotalCount']) * 100
 
-# Step 9: Sort the DataFrame by PercentWeek1 in descending order
-age_counts_df = age_counts_df.sort_values(by='PercentWeek1', ascending=False)
+# Step 9: Sort the DataFrame by Eliminated Week 1 in descending order
+age_counts_df = age_counts_df.sort_values(by='Eliminated Week 1', ascending=False)
 
 # Step 10: Reshape the data to make it suitable for stacked bar chart (melt the data)
-melted_age_df = age_counts_df.melt(id_vars='AgeBucket', value_vars=['PercentWeek1', 'PercentRemaining'],
+melted_age_df = age_counts_df.melt(id_vars='AgeBucket', value_vars=['Eliminated Week 1', ' Not Eliminated Week 1'],
                                     var_name='Status', value_name='Percent')
 
 # Step 11: Ensure 'Percent' column is numeric to prevent any sorting issues
@@ -228,11 +228,11 @@ income_counts_df = income_counts_df.dropna(subset=['IncomeBin', 'Week1Count'])
 income_counts_df['RemainingCount'] = income_counts_df['TotalCount'] - income_counts_df['Week1Count']
 
 # Step 7: Calculate percentage of Week 1 eliminations and remaining contestants
-income_counts_df['PercentWeek1'] = (income_counts_df['Week1Count'] / income_counts_df['TotalCount']) * 100
-income_counts_df['PercentRemaining'] = (income_counts_df['RemainingCount'] / income_counts_df['TotalCount']) * 100
+income_counts_df['Eliminated Week 1'] = (income_counts_df['Week1Count'] / income_counts_df['TotalCount']) * 100
+income_counts_df[' Not Eliminated Week 1'] = (income_counts_df['RemainingCount'] / income_counts_df['TotalCount']) * 100
 
 # Step 8: Reshape the data to make it suitable for stacked bar chart (melt the data)
-melted_income_df = income_counts_df.melt(id_vars='IncomeBin', value_vars=['PercentWeek1', 'PercentRemaining'],
+melted_income_df = income_counts_df.melt(id_vars='IncomeBin', value_vars=['Eliminated Week 1', ' Not Eliminated Week 1'],
                                          var_name='Status', value_name='Percent')
 
 # Step 9: Create the Altair stacked bar chart for Income Bins
