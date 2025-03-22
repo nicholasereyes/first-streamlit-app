@@ -1,4 +1,4 @@
 streamlit
 matplotlib
 seaborn
-geopandas
+pandas
