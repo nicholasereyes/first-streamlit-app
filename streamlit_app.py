@@ -115,7 +115,7 @@ base = alt.Chart(melted_df).mark_bar().encode(
 # Display the chart in Streamlit
 st.write("### Step 1: Be from Texas.")
 st.altair_chart(base)
-st.write("""Ah, Texas. The land of cowboy hats, longhorns, and a disproportionate number of contestants who somehow avoid the dreaded first-week elimination. In fact, if you’re from Texas, your odds of staying are way better than anyone else. It’s like the producers are contractually obligated to keep you around, probably because they know a Texas contestant will bring the most drama. (Shoutout to the state that knows how to ride hard and stay on the show longer than most.""")
+st.write("""Ah, Texas. The land of cowboy hats, longhorns, and a disproportionate number of contestants who somehow avoid the dreaded first-week elimination. In fact, if you’re from Texas, your odds of staying are way better than anyone else. It’s like the producers are contractually obligated to keep you around, probably because they know a Texas contestant will bring the most drama. (Shoutout to the state that knows how to ride hard and stay on the show longer than most.)""")
 
 #-----------------------------------------------------------------------------
 
@@ -256,4 +256,4 @@ st.altair_chart(base_income)
 st.write("""Alright, plot twist—poor states actually have lower Week 1 elimination rates. Who would've thought? Turns out, the producers might not care if you're a CEO or an aspiring Instagram model, as long as you’re coming from a state where the median income is closer to the "Let’s get by" end of the spectrum, you’ve got a better shot at staying. Maybe it’s the underdog spirit? Or maybe they just like the drama of someone fighting their way through life and love. Either way, it’s a fascinating, totally unexpected trend. Now, this doesn't mean you can show up in a pair of flip-flops and a smile and still get a rose—but hey, at least you’ve got a fighting chance.
 """)
 st.write("### Every contestant on the Bachelorette from the first 21 seasons")
-st.table(get_bach_data())
+st.dataframe(get_bach_data().iloc[:,:6])
