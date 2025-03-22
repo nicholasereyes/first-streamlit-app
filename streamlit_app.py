@@ -63,7 +63,9 @@ merged_df = merge_bach_with_income(raw_bach_df, income_df)
 
 # Streamlit UI elements
 st.title("The Bachelorette: How not to immediately lose")
-
+st.write("""
+**The Bachelorette** is a reality TV show where a single woman (the "Bachelorette") goes through a series of dates with eligible men, eliminating contestants each week until one remains, and they presumably live happily ever after. If you’ve ever watched The Bachelorette (and let’s face it, you probably have), you know it’s a whirlwind of dates, drama, and deciding which contestant is the best fit for the lead. It's like a high-stakes, televised speed-dating event. But one fate you definitely don’t want to face? Getting booted in the first week. It's not only embarrassing but also a surefire way to make your mom tell you, "Well, at least you made it on TV!"—before the embarrassment really sinks in. Naturally, I went through data for every contestant from the first 21 seasons to find patterns, because what else would I do with my time?
+""")
 #-----------------------------------------------------------------------------
 
 # Step 1: Count total contestants per state
@@ -113,6 +115,7 @@ base = alt.Chart(melted_df).mark_bar().encode(
 # Display the chart in Streamlit
 st.write("### Step 1: Be from Texas.")
 st.altair_chart(base)
+st.write("""Ah, Texas. The land of cowboy hats, longhorns, and a disproportionate number of contestants who somehow avoid the dreaded first-week elimination. In fact, if you’re from Texas, your odds of staying are way better than anyone else. It’s like the producers are contractually obligated to keep you around, probably because they know a Texas contestant will bring the most drama. (Shoutout to the state that knows how to ride hard and stay on the show longer than most.""")
 
 #-----------------------------------------------------------------------------
 
@@ -198,7 +201,7 @@ base_age = alt.Chart(melted_age_df).mark_bar().encode(
 # Display the chart in Streamlit
 st.write("### Step 2: Don't be old.")
 st.altair_chart(base_age)
-
+st.write("""Aging like a fine wine? Not so much in The Bachelorette. When you’re over 40, you better pack your bags after your initial introduction because apparently, the producers didn’t get the memo about aging gracefully. Statistically, your chances of sticking around aren't great. But hey, you’ve got a lifetime of experience to comfort you when you’re crying on the limo ride home. If you’re over 40 and want to stay, it’s probably best to pretend you’re 30 again—and leave the age crisis at home.""")
 #-----------------------------------------------------------------------------
 
 # Step 1: Bin the household income into categories (e.g., Low, Medium, High)
@@ -250,6 +253,7 @@ base_income = alt.Chart(melted_income_df).mark_bar().encode(
 # Display the chart in Streamlit
 st.write("### 3. Be... poor?")
 st.altair_chart(base_income)
-
+st.write("""Alright, plot twist—poor states actually have lower Week 1 elimination rates. Who would've thought? Turns out, the producers might not care if you're a CEO or an aspiring Instagram model, as long as you’re coming from a state where the median income is closer to the "Let’s get by" end of the spectrum, you’ve got a better shot at staying. Maybe it’s the underdog spirit? Or maybe they just like the drama of someone fighting their way through life and love. Either way, it’s a fascinating, totally unexpected trend. Now, this doesn't mean you can show up in a pair of flip-flops and a smile and still get a rose—but hey, at least you’ve got a fighting chance.
+""")
 st.write("### Every contestant on the Bachelorette from the first 21 seasons")
 st.table(get_bach_data())
