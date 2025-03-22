@@ -62,7 +62,7 @@ raw_bach_df = get_bach_data()
 merged_df = merge_bach_with_income(raw_bach_df, income_df)
 
 # Streamlit UI elements
-st.title("Bachelorette Analysis")
+st.title("The Bachelorette: How not to immediately lose")
 
 #-----------------------------------------------------------------------------
 
@@ -96,16 +96,22 @@ melted_df = state_counts_df.melt(id_vars='State', value_vars=['PercentWeek1', 'P
 base = alt.Chart(melted_df).mark_bar().encode(
     x=alt.X('State:N', sort=alt.EncodingSortField(field='PercentWeek1', order='descending'), title='State'),
     y=alt.Y('Percent:Q', title='% of Total Contestants'),
-    color='Status:N',
+    color=alt.Color('Status:N', 
+                    title='Contestant Status',  # Title for the legend
+                    scale=alt.Scale(
+                        domain=['PercentWeek1', 'PercentRemaining']  # Original categories
+                        # range=['#FF6347', '#32CD32']  # New legend labels (you can use colors too)
+                    )
+    ),
     tooltip=['State', 'Status', 'Percent']
 ).properties(
-    title="Percent of Total Contestants Eliminated in Week 1 vs Remaining by State",
+    title="Contestants from Texas historically have the lowest odds of getting booted Week 1.",
     width=700,
     height=400
 )
 
 # Display the chart in Streamlit
-st.write("### Percent of Total Contestants Eliminated in Week 1 vs Remaining by State")
+st.write("### Step 1: Be from Texas.")
 st.altair_chart(base)
 
 #-----------------------------------------------------------------------------
@@ -181,19 +187,19 @@ melted_age_df['Percent'] = pd.to_numeric(melted_age_df['Percent'], errors='coerc
 base_age = alt.Chart(melted_age_df).mark_bar().encode(
     x=alt.X('AgeBucket:N', title='Age Bucket'),
     y=alt.Y('Percent:Q', title='% of Total Contestants'),
-    color='Status:N',
+    color=alt.Color('Status:N', title='Contestant Status'),
     tooltip=['AgeBucket', 'Status', 'Percent']
 ).properties(
-    title="Percent of Total Contestants Eliminated in Week 1 vs Remaining by Age Bucket",
+    title="There were 2 contestants over the age of 40. Both were eliminated 1st round.",
     width=700,
     height=400
 )
 
-#-----------------------------------------------------------------------------
-
 # Display the chart in Streamlit
-st.write("### Percent of Total Contestants Eliminated in Week 1 vs Remaining by Age Bucket")
+st.write("### Step 2: Don't be old.")
 st.altair_chart(base_age)
+
+#-----------------------------------------------------------------------------
 
 # Step 1: Bin the household income into categories (e.g., Low, Medium, High)
 # Define the income bins
@@ -236,11 +242,11 @@ base_income = alt.Chart(melted_income_df).mark_bar().encode(
     color='Status:N',
     tooltip=['IncomeBin', 'Status', 'Percent']
 ).properties(
-    title="Percent of Total Contestants Eliminated in Week 1 vs Remaining by Household Income Bin",
+    title="Contestants who are from poorer states have lower Week 1 elimination rates.",
     width=700,
     height=400
 )
 
 # Display the chart in Streamlit
-st.write("### Percent of Total Contestants Eliminated in Week 1 vs Remaining by Household Income Bin")
+st.write("### 3. Be... poor?")
 st.altair_chart(base_income)
