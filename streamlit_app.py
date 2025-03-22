@@ -64,24 +64,7 @@ merged_df = merge_bach_with_income(raw_bach_df, income_df)
 # Streamlit UI elements
 st.title("Bachelorette Analysis")
 
-# Step 1: Count total contestants per state
-total_state_counts = raw_bach_df['State'].value_counts().reset_index()
-total_state_counts.columns = ['State', 'TotalCount']
-
-# Step 2: Create a histogram by State for total contestants
-histogram = alt.Chart(total_state_counts).mark_bar().encode(
-    x=alt.X('State:N', sort='-y', title='State'),
-    y=alt.Y('TotalCount:Q', title='Total Contestants'),
-    tooltip=['State', 'TotalCount']
-).properties(
-    title="Distribution of Contestants by State",
-    width=700,
-    height=400
-)
-
-# Display the histogram in Streamlit
-st.write("### Distribution of Contestants by State")
-st.altair_chart(histogram)
+#-----------------------------------------------------------------------------
 
 # Step 1: Count total contestants per state
 total_state_counts = raw_bach_df['State'].value_counts().reset_index()
@@ -125,9 +108,7 @@ base = alt.Chart(melted_df).mark_bar().encode(
 st.write("### Percent of Total Contestants Eliminated in Week 1 vs Remaining by State")
 st.altair_chart(base)
 
-import pandas as pd
-import numpy as np
-import altair as alt
+#-----------------------------------------------------------------------------
 
 # Step 1: Calculate the median and standard deviation of age
 median_age = merged_df['Age'].median()
@@ -208,6 +189,58 @@ base_age = alt.Chart(melted_age_df).mark_bar().encode(
     height=400
 )
 
+#-----------------------------------------------------------------------------
+
 # Display the chart in Streamlit
 st.write("### Percent of Total Contestants Eliminated in Week 1 vs Remaining by Age Bucket")
 st.altair_chart(base_age)
+
+# Step 1: Bin the household income into categories (e.g., Low, Medium, High)
+# Define the income bins
+income_bins = [0, 40000, 60000, 80000, 100000, float('inf')]  # Customize the bin values as needed
+income_labels = ['Low (<$40k)', '$40k-$60k', '$60k-$80k', '$80k-$100k', 'High (>$100k)']
+
+# Add a new column to the merged_df with the income bin category
+merged_df['IncomeBin'] = pd.cut(merged_df['Median Household Income'], bins=income_bins, labels=income_labels, right=False)
+
+# Step 2: Count total contestants per income bin
+total_income_counts = merged_df['IncomeBin'].value_counts().reset_index()
+total_income_counts.columns = ['IncomeBin', 'TotalCount']
+
+# Step 3: Count Week 1 eliminations per income bin
+elim_week1_income_df = merged_df[merged_df['ElimWeek'] == 1]
+week1_income_counts = elim_week1_income_df['IncomeBin'].value_counts().reset_index()
+week1_income_counts.columns = ['IncomeBin', 'Week1Count']
+
+# Step 4: Merge the total and Week 1 elimination counts on 'IncomeBin'
+income_counts_df = pd.merge(total_income_counts, week1_income_counts, on='IncomeBin', how='left')
+
+# Step 5: Filter out rows where 'IncomeBin' or 'Week1Count' is null
+income_counts_df = income_counts_df.dropna(subset=['IncomeBin', 'Week1Count'])
+
+# Step 6: Calculate remaining contestants per income bin
+income_counts_df['RemainingCount'] = income_counts_df['TotalCount'] - income_counts_df['Week1Count']
+
+# Step 7: Calculate percentage of Week 1 eliminations and remaining contestants
+income_counts_df['PercentWeek1'] = (income_counts_df['Week1Count'] / income_counts_df['TotalCount']) * 100
+income_counts_df['PercentRemaining'] = (income_counts_df['RemainingCount'] / income_counts_df['TotalCount']) * 100
+
+# Step 8: Reshape the data to make it suitable for stacked bar chart (melt the data)
+melted_income_df = income_counts_df.melt(id_vars='IncomeBin', value_vars=['PercentWeek1', 'PercentRemaining'],
+                                         var_name='Status', value_name='Percent')
+
+# Step 9: Create the Altair stacked bar chart for Income Bins
+base_income = alt.Chart(melted_income_df).mark_bar().encode(
+    x=alt.X('IncomeBin:N', title='Household Income Bin'),
+    y=alt.Y('Percent:Q', title='% of Total Contestants'),
+    color='Status:N',
+    tooltip=['IncomeBin', 'Status', 'Percent']
+).properties(
+    title="Percent of Total Contestants Eliminated in Week 1 vs Remaining by Household Income Bin",
+    width=700,
+    height=400
+)
+
+# Display the chart in Streamlit
+st.write("### Percent of Total Contestants Eliminated in Week 1 vs Remaining by Household Income Bin")
+st.altair_chart(base_income)
