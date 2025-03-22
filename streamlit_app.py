@@ -250,3 +250,6 @@ base_income = alt.Chart(melted_income_df).mark_bar().encode(
 # Display the chart in Streamlit
 st.write("### 3. Be... poor?")
 st.altair_chart(base_income)
+
+st.write("### Every contestant on the Bachelorette from the first 21 seasons")
+st.table(get_bach_data())
